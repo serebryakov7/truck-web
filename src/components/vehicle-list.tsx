@@ -2,22 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import {
-  MoreVertical,
-  MapPin,
-  Clock,
-  AlertTriangle,
-  Fuel,
-  User,
-  Eye,
-} from "lucide-react";
+import { MapPin, Clock, AlertTriangle, Fuel, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 // Мокированные данные транспортных средств
 const mockVehicles = [
@@ -154,37 +140,16 @@ export function VehicleList({ className }: VehicleListProps) {
       {viewMode === "cards" && (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {mockVehicles.map((vehicle) => (
-            <div
+            <Link
               key={vehicle.id}
-              className="bg-white rounded-lg shadow border hover:shadow-md transition-shadow"
+              href={`/vehicles/${vehicle.id}`}
+              className="bg-white rounded-lg shadow border hover:shadow-lg hover:border-blue-300 transition-all duration-200 block cursor-pointer transform hover:scale-[1.02]"
             >
               <div className="p-4">
                 {/* Заголовок карточки */}
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="font-semibold text-lg">{vehicle.number}</h3>
-                    <p className="text-sm text-gray-600">{vehicle.model}</p>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <MoreVertical className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link href={`/vehicles/${vehicle.id}`}>
-                          <Eye className="size-4 mr-2" />
-                          Подробности
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>Показать на карте</DropdownMenuItem>
-                      <DropdownMenuItem>История поездок</DropdownMenuItem>
-                      <DropdownMenuItem>
-                        Техническое обслуживание
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <div className="mb-3">
+                  <h3 className="font-semibold text-lg">{vehicle.number}</h3>
+                  <p className="text-sm text-gray-600">{vehicle.model}</p>
                 </div>
 
                 {/* Статус */}
@@ -235,7 +200,7 @@ export function VehicleList({ className }: VehicleListProps) {
                   </div>
                 )}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
@@ -316,26 +281,12 @@ export function VehicleList({ className }: VehicleListProps) {
                       {vehicle.lastUpdate}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreVertical className="size-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/vehicles/${vehicle.id}`}>
-                              <Eye className="size-4 mr-2" />
-                              Подробности
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>Показать на карте</DropdownMenuItem>
-                          <DropdownMenuItem>История поездок</DropdownMenuItem>
-                          <DropdownMenuItem>
-                            Техническое обслуживание
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Link
+                        href={`/vehicles/${vehicle.id}`}
+                        className="text-blue-600 hover:text-blue-900 font-medium"
+                      >
+                        Подробности
+                      </Link>
                     </td>
                   </tr>
                 ))}

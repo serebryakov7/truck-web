@@ -33,7 +33,7 @@ export function LoginForm({
     if (email === "admin" && password === "admin") {
       // Симулируем небольшую задержку
       setTimeout(() => {
-        router.push("/");
+        router.push("/vehicles");
       }, 500);
     } else {
       setError("Неверные учетные данные. Используйте admin/admin");
