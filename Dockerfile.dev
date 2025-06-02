@@ -1,0 +1,19 @@
+# Dockerfile для разработки
+FROM node:24-alpine
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Копируем package.json и устанавливаем зависимости
+COPY package*.json ./
+RUN npm ci
+
+# Копируем исходный код
+COPY . .
+
+# Открываем порт 3000
+EXPOSE 3000
+
+# Запускаем в режиме разработки
+CMD ["npm", "run", "dev"]
