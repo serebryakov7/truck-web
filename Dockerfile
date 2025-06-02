@@ -12,8 +12,8 @@ COPY package*.json ./
 
 # Этап установки зависимостей
 FROM base AS deps
-# Устанавливаем зависимости
-RUN npm ci --only=production && npm cache clean --force
+# Устанавливаем все зависимости (включая dev) для сборки
+RUN npm ci && npm cache clean --force
 
 # Этап сборки
 FROM base AS builder
@@ -23,10 +23,16 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 # Устанавливаем переменную окружения для production сборки
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 
 # Собираем приложение
 RUN npm run build
+
+# Устанавливаем только production зависимости для финального образа
+FROM base AS production-deps
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
 
 # Этап production
 FROM base AS runner
@@ -35,6 +41,9 @@ WORKDIR /app
 # Создаем пользователя для безопасности
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+# Копируем production зависимости
+COPY --from=production-deps /app/node_modules ./node_modules
 
 # Копируем необходимые файлы из builder
 COPY --from=builder /app/public ./public
@@ -51,10 +60,10 @@ USER nextjs
 EXPOSE 3000
 
 # Устанавливаем переменные окружения
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Запускаем приложение
 CMD ["node", "server.js"]
