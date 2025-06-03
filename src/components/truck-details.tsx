@@ -29,6 +29,7 @@ import ReactECharts from "echarts-for-react";
 import { useRouter } from "next/navigation";
 import { TelemetryCharts } from "@/components/telemetry-charts";
 import { DTCTable } from "@/components/dtc-table";
+import { MetricsTable } from "@/components/metrics-table";
 
 interface TruckDetailsProps {
   truckId: string;
@@ -172,118 +173,6 @@ export function TruckDetails({ truckId }: TruckDetailsProps) {
         </div>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Пробег</p>
-                <p className="text-2xl font-bold">
-                  {truck.kpis.totalMileage.toLocaleString()}
-                </p>
-                <p className="text-xs text-gray-500">км</p>
-              </div>
-              <div className="w-16 h-8">
-                <ReactECharts
-                  option={getMiniChartOption(
-                    [45, 52, 48, 61, 58, 55, 62],
-                    "#3b82f6"
-                  )}
-                  style={{ height: "100%", width: "100%" }}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Расход топлива</p>
-                <p className="text-2xl font-bold">
-                  {truck.kpis.fuelConsumption}
-                </p>
-                <p className="text-xs text-gray-500">л/100км</p>
-              </div>
-              <div className="w-16 h-8">
-                <ReactECharts
-                  option={getMiniChartOption(
-                    [8.8, 8.2, 8.5, 8.1, 8.7, 8.3, 8.5],
-                    "#10b981"
-                  )}
-                  style={{ height: "100%", width: "100%" }}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Моточасы</p>
-                <p className="text-2xl font-bold">{truck.kpis.engineHours}</p>
-                <p className="text-xs text-gray-500">часов</p>
-              </div>
-              <div className="w-16 h-8">
-                <ReactECharts
-                  option={getMiniChartOption(
-                    [3180, 3200, 3220, 3195, 3240, 3230, 3240],
-                    "#f59e0b"
-                  )}
-                  style={{ height: "100%", width: "100%" }}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Коды DTC</p>
-                <p className="text-2xl font-bold">
-                  {truck.kpis.activeDtcCodes}
-                </p>
-                <p className="text-xs text-gray-500">активных</p>
-              </div>
-              <AlertTriangle
-                className={`h-8 w-8 ${
-                  truck.kpis.activeDtcCodes > 0
-                    ? "text-yellow-500"
-                    : "text-gray-300"
-                }`}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Состояние</p>
-                <p className="text-2xl font-bold">{truck.kpis.healthScore}%</p>
-                <p className="text-xs text-gray-500">здоровье</p>
-              </div>
-              <div className="w-16 h-8">
-                <ReactECharts
-                  option={getMiniChartOption(
-                    [82, 84, 83, 85, 87, 85, 85],
-                    "#06b6d4"
-                  )}
-                  style={{ height: "100%", width: "100%" }}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Main Content Tabs */}
       <Tabs
         value={activeTab}
@@ -296,7 +185,7 @@ export function TruckDetails({ truckId }: TruckDetailsProps) {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
-          <TelemetryCharts telemetry={truck.telemetry} />
+          <MetricsTable telemetry={truck.telemetry} />
         </TabsContent>
 
         <TabsContent value="diagnostics" className="space-y-4">
